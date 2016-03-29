@@ -1,0 +1,12 @@
+C:\Users\misatran\Source\Repos\CardsPrototyping\ConsoleApplication3\ConsoleApplication3\obj\Debug\ConsoleApplication3.csprojResolveAssemblyReference.cache
+C:\Users\misatran\Source\Repos\CardsPrototyping\ConsoleApplication3\ConsoleApplication3\bin\Debug\ConsoleApplication3.exe.config
+C:\Users\misatran\Source\Repos\CardsPrototyping\ConsoleApplication3\ConsoleApplication3\bin\Debug\ConsoleApplication3.exe
+C:\Users\misatran\Source\Repos\CardsPrototyping\ConsoleApplication3\ConsoleApplication3\bin\Debug\ConsoleApplication3.pdb
+C:\Users\misatran\Source\Repos\CardsPrototyping\ConsoleApplication3\ConsoleApplication3\obj\Debug\ConsoleApplication3.exe
+C:\Users\misatran\Source\Repos\CardsPrototyping\ConsoleApplication3\ConsoleApplication3\obj\Debug\ConsoleApplication3.pdb
+C:\Users\misatran\Source\Repos\ProjC-ImageSteganography\ConsoleApplication3\ConsoleApplication3\bin\Debug\ConsoleApplication3.exe.config
+C:\Users\misatran\Source\Repos\ProjC-ImageSteganography\ConsoleApplication3\ConsoleApplication3\obj\Debug\ConsoleApplication3.exe
+C:\Users\misatran\Source\Repos\ProjC-ImageSteganography\ConsoleApplication3\ConsoleApplication3\obj\Debug\ConsoleApplication3.pdb
+C:\Users\misatran\Source\Repos\ProjC-ImageSteganography\ConsoleApplication3\ConsoleApplication3\bin\Debug\ConsoleApplication3.exe
+C:\Users\misatran\Source\Repos\ProjC-ImageSteganography\ConsoleApplication3\ConsoleApplication3\bin\Debug\ConsoleApplication3.pdb
+C:\Users\misatran\Source\Repos\ProjC-ImageSteganography\ConsoleApplication3\ConsoleApplication3\obj\Debug\ConsoleApplication3.csprojResolveAssemblyReference.cache
