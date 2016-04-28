@@ -133,19 +133,24 @@ namespace ConsoleApplication3
                         return;
                     }
 
-                    Console.WriteLine($"The maximum amount of bytes you can write to {image} is {MaxBytes(image)}");
-                    Console.WriteLine($"Please choose the file to hide");
-
-                    OpenFileDialog dia = new OpenFileDialog();
-                    dia.Title = $"Choose a file to hide in {image}";
-                    if (dia.ShowDialog() == DialogResult.OK)
+                    if (MessageBox.Show($"The maximum amount of bytes you can write to {image} is { MaxBytes(image)}", "Maximum file size") == DialogResult.OK)
                     {
-                        byte[] data = System.IO.File.ReadAllBytes(dia.FileName);
-                        byte[] encrypted = Encrypt(data, "p@ssw0rd");
-                        PutDataInImage(encrypted, image, dia.SafeFileName, image + "_HIDDEN.png");
-                    }
+                        OpenFileDialog dia = new OpenFileDialog();
+                        dia.Title = $"Choose a file to hide in {image}";
+                        if (dia.ShowDialog() == DialogResult.OK)
+                        {
+                            string encPassword = Microsoft.VisualBasic.Interaction.InputBox("Enter a password, no enryption if left blank.", "Encrypt your data", "");
+                            byte[] data = System.IO.File.ReadAllBytes(dia.FileName);
+                            byte[] encrypted = null;
+                            if (encPassword != "")
+                            {
+                                encrypted = Encrypt(data, encPassword);
+                            }
+                            PutDataInImage(encrypted ?? data, image, dia.SafeFileName, image + "_HIDDEN.png");
+                        }
 
-                    Console.WriteLine($"Successfully hid {dia.FileName} in {image}");
+                        MessageBox.Show($"Successfully hid {dia.FileName} in {image}");
+                    }
                     break;
                 case "-u":
                     if (args.Length <= 1)
@@ -153,16 +158,23 @@ namespace ConsoleApplication3
                         Console.WriteLine("Error: Please specify the image that you want to extract hidden data from.");
                         return;
                     }
+
                     var file = GetMessageInImage(args[1]);
 
                     Console.WriteLine($"Found {file}... Extracting it from {args[1]}...");
                     byte[] result = GetDataInImage(args[1]);
-                    byte[] decrypted = Decrypt(result, "p@ssw0rd");
+
+                    string decPassword = Microsoft.VisualBasic.Interaction.InputBox("Enter a password, no enryption if left blank.", "Encrypt your data", "");
+                    byte[] decrypted = null;
+                    if (decPassword != "")
+                    {
+                        decrypted = Decrypt(result, decPassword);
+                    }
+
                     Console.WriteLine($"Done...Writing to {args[1] + file}");
-                    System.IO.File.WriteAllBytes(args[1] + file, decrypted);
+                    System.IO.File.WriteAllBytes(args[1] + file, decrypted ?? result);
                     Console.WriteLine($"Successfully saved to {args[1] + file}");
                     break;
-
             }
         }
 
