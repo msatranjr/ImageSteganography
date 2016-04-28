@@ -15,18 +15,18 @@ namespace ConsoleApplication3
         private static int _keySize = 256;
 
         private static string _hash = "SHA1";
-        private static string _salt = "aselrias38490a32";
+        private static string _salt = "a73g81hf38490a32";
         private static string _vector = "8947az34awl34kjq";
 
-        private static string Encrypt(string value, string password)
+        private static byte[] Encrypt(byte[] value, string password)
         {
-            return Encrypt<AesManaged>(value, password);
+            byte[] step1 = Encrypt<AesManaged>(value, password);
+            return step1;
         }
-        private static string Encrypt<T>(string value, string password) where T : SymmetricAlgorithm, new ()
+        private static byte[] Encrypt<T>(byte[] value, string password) where T : SymmetricAlgorithm, new ()
         {
             byte[] vectorBytes = ASCIIEncoding.ASCII.GetBytes(_vector);
             byte[] saltBytes = ASCIIEncoding.ASCII.GetBytes(_salt);
-            byte[] valueBytes = UTF8Encoding.UTF8.GetBytes(value);
 
             byte[] encrypted;
 
@@ -44,7 +44,7 @@ namespace ConsoleApplication3
                     {
                         using (CryptoStream writer = new CryptoStream(to, encryptor, CryptoStreamMode.Write))
                         {
-                            writer.Write(valueBytes, 0, valueBytes.Length);
+                            writer.Write(value, 0, value.Length);
                             writer.FlushFinalBlock();
                             encrypted = to.ToArray();
                         }
@@ -52,18 +52,18 @@ namespace ConsoleApplication3
                 }
                 cipher.Clear();
             }
-            return Convert.ToBase64String(encrypted);
+            return encrypted;
         }
 
-        public static string Decrypt(string value, string password)
+        public static byte[] Decrypt(byte[] value, string password)
         {
-            return Decrypt<AesManaged>(value, password);
+            byte[] step1 = Decrypt<AesManaged>(value, password);
+            return step1;
         }
-        public static string Decrypt<T>(string value, string password) where T : SymmetricAlgorithm, new()
+        public static byte[] Decrypt<T>(byte[] value, string password) where T : SymmetricAlgorithm, new()
         {
             byte[] vectorBytes = ASCIIEncoding.ASCII.GetBytes(_vector);
             byte[] saltBytes = ASCIIEncoding.ASCII.GetBytes(_salt);
-            byte[] valueBytes = Convert.FromBase64String(value);
 
             byte[] decrypted;
             int decryptedByteCount = 0;
@@ -79,11 +79,11 @@ namespace ConsoleApplication3
                 {
                     using (ICryptoTransform decryptor = cipher.CreateDecryptor(keyBytes, vectorBytes))
                     {
-                        using (MemoryStream from = new MemoryStream(valueBytes))
+                        using (MemoryStream from = new MemoryStream(value))
                         {
                             using (CryptoStream reader = new CryptoStream(from, decryptor, CryptoStreamMode.Read))
                             {
-                                decrypted = new byte[valueBytes.Length];
+                                decrypted = new byte[value.Length];
                                 decryptedByteCount = reader.Read(decrypted, 0, decrypted.Length);
                             }
                         }
@@ -91,12 +91,12 @@ namespace ConsoleApplication3
                 }
                 catch (Exception ex)
                 {
-                    return String.Empty;
+                    return new byte[0];
                 }
 
                 cipher.Clear();
             }
-            return Encoding.UTF8.GetString(decrypted, 0, decryptedByteCount);
+            return decrypted;
         }
 
 
@@ -109,11 +109,8 @@ namespace ConsoleApplication3
             {
                 Console.WriteLine("Error: Please use either -h to hide an image or -u to unhide an image.");
                 Console.WriteLine("Running in debug mode...");
-                //string[] debugArgs = new string[] { "-h", @"C:\Users\misatran\OneDrive\Pictures\Engagement photos\Sharel and Michael-2.jpg" };
-                //Run(debugArgs);
-
-                string encrypted = Encrypt("Hello, worldasdfasdfasdfasdfasdfasdfasdfadf", "Mic1007805");
-                string decrypted = Decrypt("GZy4c9XEhi7F0h8+3HnI1A==", "Mic1007804");
+                string[] debugArgs = new string[] { "-u", @"C:\Users\misatran\OneDrive\Pictures\Engagement photos\Sharel and Michael-2.jpg_HIDDEN.png" };
+                Run(debugArgs);
 
             }
             else
@@ -144,7 +141,8 @@ namespace ConsoleApplication3
                     if (dia.ShowDialog() == DialogResult.OK)
                     {
                         byte[] data = System.IO.File.ReadAllBytes(dia.FileName);
-                        PutDataInImage(data, image, dia.SafeFileName, image + "_HIDDEN.png");
+                        byte[] encrypted = Encrypt(data, "p@ssw0rd");
+                        PutDataInImage(encrypted, image, dia.SafeFileName, image + "_HIDDEN.png");
                     }
 
                     Console.WriteLine($"Successfully hid {dia.FileName} in {image}");
@@ -159,8 +157,9 @@ namespace ConsoleApplication3
 
                     Console.WriteLine($"Found {file}... Extracting it from {args[1]}...");
                     byte[] result = GetDataInImage(args[1]);
+                    byte[] decrypted = Decrypt(result, "p@ssw0rd");
                     Console.WriteLine($"Done...Writing to {args[1] + file}");
-                    System.IO.File.WriteAllBytes(args[1] + file, result);
+                    System.IO.File.WriteAllBytes(args[1] + file, decrypted);
                     Console.WriteLine($"Successfully saved to {args[1] + file}");
                     break;
 
